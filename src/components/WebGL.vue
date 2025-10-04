@@ -22,7 +22,7 @@ import { useGSAP } from '@/composables/useGSAP'
 import { SpiralMaterial } from '@/assets/materials'
 
 const canvasRef = useTemplateRef('canvas')
-let perfPanel, scene, camera, renderer, spiral, controls
+let perfPanel, scene, camera, renderer, spiral, controls, dirLight
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
@@ -41,6 +41,7 @@ onMounted(async () => {
 	createRenderer()
 
 	createSpiral()
+	createLight()
 
 	createControls()
 
@@ -56,7 +57,9 @@ onMounted(async () => {
 	})
 
 	if (Object.hasOwn(params, 'debug')) {
-		await import('@/assets/Debug')
+		const { Debug } = await import('@/assets/Debug')
+		const debug = new Debug(dirLight)
+		debug.init()
 
 		if (!renderer.isWebGPURenderer) {
 			const { ThreePerf } = await import('three-perf')
@@ -105,7 +108,7 @@ function createCamera() {
 		100
 	)
 
-	camera.position.set(0, 7, 15)
+	camera.position.set(0, 15, 20)
 	camera.lookAt(0, 0, 0)
 }
 
@@ -144,12 +147,22 @@ function createSpiral() {
 		spiral.setMatrixAt(i, matrix)
 	}
 
+	spiral.instanceMatrix.needsUpdate = true
+
 	const positionsAttribute = new THREE.InstancedBufferAttribute(positions, 3)
 	geometry.setAttribute('a_InstancePosition', positionsAttribute)
 
-	console.log(geometry)
-
 	scene.add(spiral)
+}
+
+function createLight() {
+	dirLight = new THREE.DirectionalLight(0xffffff, 100)
+	dirLight.position.set(0, 10, -10)
+
+	scene.add(dirLight)
+
+	const helper = new THREE.DirectionalLightHelper(dirLight, 1)
+	scene.add(helper)
 }
 
 function phyllotaxis(i) {

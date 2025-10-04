@@ -1,7 +1,29 @@
-import { PI, Fn, vec3, positionLocal, positionGeometry, positionWorld, uniform, attribute, modelWorldMatrix, float, min, color, smoothstep, time, cos, sin } from 'three/tsl'
-import { MeshBasicNodeMaterial } from 'three/webgpu'
+import {
+  PI,
+  Fn,
+  vec3,
+  positionLocal,
+  positionWorld,
+  uniform,
+  attribute,
+  modelWorldMatrix,
+  float,
+  min,
+  color,
+  smoothstep,
+  time,
+  cos,
+  sin,
+  lights,
+  dFdx,
+  dFdy,
+  cross
+} from 'three/tsl'
+import { MeshStandardNodeMaterial } from 'three/webgpu'
 
-export const SpiralMaterial = new MeshBasicNodeMaterial()
+export const SpiralMaterial = new MeshStandardNodeMaterial({
+  color: 0x00ff00
+})
 
 export const pointRadius = uniform(4)
 export const pointStrength = uniform(2.5)
@@ -40,5 +62,13 @@ SpiralMaterial.colorNode = Fn(() => {
   const t = smoothstep(-1.0, 1.0, positionLocal.y)
   const col = colorA.mix(colorB, t)
 
-  return col
+  const lighting = lights()
+
+  return col.mul(lighting)
+})()
+
+SpiralMaterial.normalNode = Fn(() => {
+  const dx = dFdx(positionWorld)
+  const dy = dFdy(positionWorld)
+  return cross(dx, dy).normalize()
 })()
