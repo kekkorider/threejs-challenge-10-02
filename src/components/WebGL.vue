@@ -43,7 +43,7 @@ onMounted(async () => {
 	createSpiral()
 	createLight()
 
-	createControls()
+	// createControls()
 
 	gsap.ticker.fps(60)
 
@@ -92,7 +92,7 @@ watch([windowWidth, windowHeight], value => {
 // Methods
 //
 function updateScene(time = 0) {
-	controls.update()
+	controls?.update()
 	spiral?.rotation?.set(0, time * 0.13, 0)
 }
 
@@ -109,7 +109,7 @@ function createCamera() {
 	)
 
 	camera.position.set(0, 15, 20)
-	camera.lookAt(0, 0, 0)
+	camera.lookAt(0, 0, 1.5)
 }
 
 function createRenderer() {
@@ -119,7 +119,7 @@ function createRenderer() {
 		antialias: true,
 	})
 
-	renderer.setClearColor(0x121212, 1)
+	renderer.setClearColor(0x000000, 1)
 	renderer.setSize(get(windowWidth), get(windowHeight))
 }
 
@@ -161,8 +161,8 @@ function createLight() {
 
 	scene.add(dirLight)
 
-	const helper = new THREE.DirectionalLightHelper(dirLight, 1)
-	scene.add(helper)
+	// const helper = new THREE.DirectionalLightHelper(dirLight, 1)
+	// scene.add(helper)
 }
 
 function phyllotaxis(i) {
