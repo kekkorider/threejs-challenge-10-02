@@ -15,16 +15,14 @@ import {
 	useUrlSearchParams,
 	get,
 } from '@vueuse/core'
-import * as THREE from 'three'
-import { WebGPURenderer } from 'three/webgpu'
+import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls'
 
 import { useGSAP } from '@/composables/useGSAP'
-import { SampleTSLMaterial } from '@/assets/materials'
-import { gltfLoader } from '@/assets/loaders'
+import { SpiralMaterial } from '@/assets/materials'
 
 const canvasRef = useTemplateRef('canvas')
-let perfPanel, scene, camera, renderer, mesh, controls
+let perfPanel, scene, camera, renderer, spiral, controls
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { pixelRatio: dpr } = useDevicePixelRatio()
@@ -42,9 +40,7 @@ onMounted(async () => {
 	createCamera()
 	createRenderer()
 
-	createMesh()
-
-	await loadModel()
+	createSpiral()
 
 	createControls()
 
@@ -94,7 +90,7 @@ watch([windowWidth, windowHeight], value => {
 //
 function updateScene(time = 0) {
 	controls.update()
-	mesh.rotation.set(time * 0.2, time * 0.13, time * 0.17)
+	spiral?.rotation?.set(0, time * 0.13, 0)
 }
 
 function createScene() {
@@ -109,43 +105,67 @@ function createCamera() {
 		100
 	)
 
-	camera.position.set(0, 0, 4)
+	camera.position.set(0, 7, 15)
+	camera.lookAt(0, 0, 0)
 }
 
 function createRenderer() {
-	renderer = new WebGPURenderer({
+	renderer = new THREE.WebGPURenderer({
 		canvas: get(canvasRef),
 		alpha: true,
-		antialias: get(dpr) === 1,
+		antialias: true,
 	})
 
 	renderer.setClearColor(0x121212, 1)
 	renderer.setSize(get(windowWidth), get(windowHeight))
 }
 
-async function loadModel() {
-	const gltf = await gltfLoader.load('/monkey.glb')
-	const model = gltf.scene.getObjectByName('Suzanne')
+function createSpiral() {
+	const count = 1000
+	const matrix = new THREE.Matrix4()
 
-	model.material = SampleTSLMaterial
-	model.position.x = 1
+	const geometry = new THREE.CylinderGeometry(0.1, 0.1, 2, 32)
+	spiral = new THREE.InstancedMesh(geometry, SpiralMaterial, count)
 
-	scene.add(model)
+	const positions = new Float32Array(count * 3)
+
+	for (let i = 0; i < count; i++) {
+		{
+			const { x, y: z } = phyllotaxis(i)
+			const y = 0
+
+			matrix.makeTranslation(x, y, z)
+
+			positions[i * 3] = x
+			positions[i * 3 + 1] = y
+			positions[i * 3 + 2] = z
+		}
+
+		spiral.setMatrixAt(i, matrix)
+	}
+
+	const positionsAttribute = new THREE.InstancedBufferAttribute(positions, 3)
+	geometry.setAttribute('a_InstancePosition', positionsAttribute)
+
+	console.log(geometry)
+
+	scene.add(spiral)
+}
+
+function phyllotaxis(i) {
+	const c = 0.3
+
+	const a = i * 137.5
+	const r = c * Math.sqrt(i)
+	const x = r * Math.cos(a)
+	const y = r * Math.sin(a)
+
+	return { x, y }
 }
 
 function createControls() {
 	controls = new OrbitControls(camera, renderer.domElement)
 	controls.enableDamping = true
-}
-
-function createMesh() {
-	const geometry = new THREE.BoxGeometry()
-	const material = SampleTSLMaterial
-
-	mesh = new THREE.Mesh(geometry, material)
-	mesh.position.x = -1
-
-	scene.add(mesh)
 }
 </script>
 
