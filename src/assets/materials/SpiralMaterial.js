@@ -17,16 +17,18 @@ import {
   lights,
   dFdx,
   dFdy,
-  cross
+  cross,
+  remap
 } from 'three/tsl'
+import { easeOutSine } from 'tsl-easings'
 import { MeshStandardNodeMaterial } from 'three/webgpu'
 
 export const SpiralMaterial = new MeshStandardNodeMaterial({
   color: 0x00ff00
 })
 
-export const pointRadius = uniform(4)
-export const pointStrength = uniform(2.5)
+export const pointRadius = uniform(4.7)
+export const pointStrength = uniform(3.3)
 export const pointsSpeed = uniform(1)
 
 const pointA = vec3().toVar()
@@ -51,6 +53,11 @@ SpiralMaterial.positionNode = Fn(() => {
   d.assign(min(d, d2))
   d.assign(min(d, pointStrength))
   d.assign(float(pointStrength).sub(d))
+
+  d.assign(remap(d, 0, pointStrength, 0, 1))
+
+  d.assign(easeOutSine(d))
+  d.mulAssign(2)
 
   return positionWorld.add(vec3(0, d, 0))
 })()

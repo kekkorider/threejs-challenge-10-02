@@ -9,7 +9,7 @@ export class Debug {
 
 	init() {
 		this.pane.addBinding(pointRadius, 'value', { label: 'pointRadius', min: 0, max: 6, step: 0.01 })
-		this.pane.addBinding(pointStrength, 'value', { label: 'pointStrength', min: 0, max: 3, step: 0.01 })
+		this.pane.addBinding(pointStrength, 'value', { label: 'pointStrength', min: 0, max: 5, step: 0.01 })
 		this.pane.addBinding(pointsSpeed, 'value', { label: 'pointsSpeed', min: 0, max: 2, step: 0.01 })
 
 		this.pane.addBinding(this.dirLight, 'intensity', { label: 'light intensity', min: 0, max: 200, step: 0.5 })

@@ -17,6 +17,9 @@ importers:
       three:
         specifier: ^0.180.0
         version: 0.180.0
+      tsl-easings:
+        specifier: ^0.0.1
+        version: 0.0.1
       tweakpane:
         specifier: ^4.0.5
         version: 4.0.5
@@ -545,10 +548,6 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  picomatch@4.0.2:
-    resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.3:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
@@ -594,6 +593,9 @@ packages:
 
   troika-worker-utils@0.52.0:
     resolution: {integrity: sha512-W1CpvTHykaPH5brv5VHLfQo9D1OYuo0cSBEUQFFT/nBUzM8iD6Lq2/tgG/f1OelbAS1WtaTPQzE5uM49egnngw==}
+
+  tsl-easings@0.0.1:
+    resolution: {integrity: sha512-G/PC7A4snJ7Z9H+oJvcyItemDs23513JLOrr9H+FqNdIoQu6QUF+j+pElTIquwosvJiOGqsH7nk+lh/x3VqoYA==}
 
   tweakpane@3.1.10:
     resolution: {integrity: sha512-rqwnl/pUa7+inhI2E9ayGTqqP0EPOOn/wVvSWjZsRbZUItzNShny7pzwL3hVlaN4m9t/aZhsP0aFQ9U5VVR2VQ==}
@@ -778,7 +780,7 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
-      picomatch: 4.0.2
+      picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.44.1
     optional: true
@@ -1053,9 +1055,6 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@4.0.2:
-    optional: true
-
   picomatch@4.0.3: {}
 
   postcss@8.5.6:
@@ -1120,6 +1119,8 @@ snapshots:
       three: 0.180.0
 
   troika-worker-utils@0.52.0: {}
+
+  tsl-easings@0.0.1: {}
 
   tweakpane@3.1.10: {}
 
